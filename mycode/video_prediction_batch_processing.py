@@ -32,7 +32,7 @@ def get_bounding_box_from_mask(mask):
     if not contours:
         return None
     x_min, y_min, w, h = cv2.boundingRect(contours[0])
-    return np.array([x_min - 10, y_min - 10, x_min + w + 10, y_min + h + 10], dtype=np.float32)
+    return np.array([x_min, y_min, x_min + w, y_min + h], dtype=np.float32)
 
 def save_nifti_from_slices(pred_mask_slices, reference_nifti_path, output_nifti_path):
     ref_nifti = nib.load(reference_nifti_path)
@@ -62,7 +62,7 @@ def calculate_iou(pred_masks, gt_masks):
 
     mean_iou = np.mean(iou_scores)
     print(f"Mean IoU Score: {mean_iou:.4f}")
-    return mean_iou
+    return mean_iou, iou_scores
 
 # Load Dataset CSV
 csv_path = "/share/sablab/nfs04/data/Prostate-MRI-US-Biopsy/demo/demo-tcia-biopsy-all-trainvaltest.csv"
@@ -180,8 +180,20 @@ for idx, row in df_sample.iterrows():
 
     # Save as NIfTI & Compute IoU
     save_nifti_from_slices(pred_mask_slices, gt_nifti_path, output_nifti_path)
-    iou_score = calculate_iou(pred_mask_slices, gt_masks)
-    iou_scores.append(iou_score)
+    miou_score, all_ious = calculate_iou(pred_mask_slices, gt_masks)
+    iou_scores.append(miou_score)
+
+    # deal with the iou score calculation for slices
+    with_prompt_iou = {}
+    miou_prompt = 0
+    for k in bounding_boxes.keys():
+        with_prompt_iou[k] = all_ious[k]
+        miou_prompt += all_ious[k]
+    miou_prompt /= len(with_prompt_iou)
+
+    print('IoU scores from slices with prompt:')
+    print(with_prompt_iou)
+    print(f"\nAverage IoU from slices with prompt: {miou_prompt:.4f}")
 
 # Compute & Print Average IoU
 avg_iou = np.mean(iou_scores)

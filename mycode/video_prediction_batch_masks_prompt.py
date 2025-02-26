@@ -62,7 +62,7 @@ def calculate_iou(pred_masks, gt_masks):
 
     mean_iou = np.mean(iou_scores)
     print(f"Mean IoU Score: {mean_iou:.4f}")
-    return mean_iou
+    return mean_iou, iou_scores
 
 # ===========================================================
 
@@ -74,7 +74,7 @@ df = pd.read_csv(csv_path)
 df_sample = df[df["cancer"] == True].head(10)
 
 # Path to save all results
-workspace_dir = "/home/yw2692/workspace/sam2_vis_result_masks_prompt"
+workspace_dir = "/home/yw2692/workspace/Brain-MRI-Segmentation/sam2_vis_result_masks_prompt"
 os.makedirs(workspace_dir, exist_ok=True)
 
 # Store IoU scores
@@ -184,8 +184,21 @@ for idx, row in df_sample.iterrows():
 
     # Save as NIfTI & Compute IoU
     save_nifti_from_slices(pred_mask_slices, gt_nifti_path, output_nifti_path)
-    iou_score = calculate_iou(pred_mask_slices, gt_masks)
-    iou_scores.append(iou_score)
+    miou_score, all_ious = calculate_iou(pred_mask_slices, gt_masks)
+    iou_scores.append(miou_score)
+
+    # deal with the iou score calculation for slices
+    with_prompt_iou = {}
+    miou_prompt = 0
+    for k in mask_prompts.keys():
+        with_prompt_iou[k] = all_ious[k]
+        miou_prompt += all_ious[k]
+    miou_prompt /= len(with_prompt_iou)
+
+    print('IoU scores from slices with prompt:')
+    print(with_prompt_iou)
+    print(f"\nAverage IoU from slices with prompt: {miou_prompt:.4f}")
+
 
 # Compute & Print Average IoU
 avg_iou = np.mean(iou_scores)
