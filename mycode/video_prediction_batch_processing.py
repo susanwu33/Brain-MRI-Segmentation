@@ -72,7 +72,7 @@ df = pd.read_csv(csv_path)
 df_sample = df[df["cancer"] == True].head(10)
 
 # Path to save all results
-workspace_dir = "/home/yw2692/workspace/sam2_vis_result_bbox_prompt"
+workspace_dir = "/home/yw2692/workspace/Brain-MRI-Segmentation/sam2_vis_result_bbox_prompt"
 os.makedirs(workspace_dir, exist_ok=True)
 
 # Store IoU scores
