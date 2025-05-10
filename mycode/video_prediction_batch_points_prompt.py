@@ -60,11 +60,12 @@ def calculate_iou(pred_masks, gt_masks):
 
     mean_iou = np.mean(iou_scores)
     print(f"Mean IoU Score: {mean_iou:.4f}")
-    return mean_iou
+    return mean_iou, iou_scores
 
 def generate_prompt_points(mask, num_positive=10, num_negative=50):
     pos_indices = np.argwhere(mask > 0)
     neg_indices = np.argwhere(mask == 0)
+    prompts = False
     
     if len(pos_indices) == 0:
         # If no positive points, return only negative points
@@ -80,8 +81,9 @@ def generate_prompt_points(mask, num_positive=10, num_negative=50):
 
         points = positive_points.astype(np.float32)
         labels = np.ones(len(positive_points), dtype=np.int32)
+        prompts = True
     
-    return points, labels
+    return points, labels, prompts
 
 # ===========================================================
 
@@ -93,7 +95,7 @@ df = pd.read_csv(csv_path)
 df_sample = df[df["cancer"] == True].head(10)
 
 # Path to save all results
-workspace_dir = "/home/yw2692/workspace/sam2_vis_result_points_prompt"
+workspace_dir = "/home/yw2692/workspace/Brain-MRI-Segmentation/sam2_vis_result_points_prompt"
 os.makedirs(workspace_dir, exist_ok=True)
 
 # Store IoU scores
@@ -143,6 +145,7 @@ for idx, row in df_sample.iterrows():
     frame_names = []
     points = {}
     labels = {}
+    idx_with_prompts = []
     
     for i in range(image_data.shape[2]): 
         slice_2d = normalize_image(image_data[:, :, i])
@@ -155,7 +158,9 @@ for idx, row in df_sample.iterrows():
         cv2.imwrite(gt_mask_filename, gt_mask * 255)
 
         # get the points and labels
-        points[i], labels[i] = generate_prompt_points(gt_mask)
+        points[i], labels[i], prompt_flag = generate_prompt_points(gt_mask)
+        if prompt_flag:
+            idx_with_prompts.append(i)
 
 
     # Initialize Predictor
@@ -201,8 +206,21 @@ for idx, row in df_sample.iterrows():
 
     # Save as NIfTI & Compute IoU
     save_nifti_from_slices(pred_mask_slices, gt_nifti_path, output_nifti_path)
-    iou_score = calculate_iou(pred_mask_slices, gt_masks)
-    iou_scores.append(iou_score)
+    miou_score, all_ious = calculate_iou(pred_mask_slices, gt_masks)
+    iou_scores.append(miou_score)
+
+    # deal with the iou score calculation for slices
+    with_prompt_iou = {}
+    miou_prompt = 0
+    for k in idx_with_prompts:
+        with_prompt_iou[k] = all_ious[k]
+        miou_prompt += all_ious[k]
+    miou_prompt /= len(with_prompt_iou)
+
+    print('IoU scores from slices with prompt:')
+    print(with_prompt_iou)
+    print(f"\nAverage IoU from slices with prompt: {miou_prompt:.4f}")
+
 
 # Compute & Print Average IoU
 avg_iou = np.mean(iou_scores)

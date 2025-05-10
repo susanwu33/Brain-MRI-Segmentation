@@ -1,8 +1,14 @@
 # Brain-MRI-Segmentation
 
 
+<<<<<<< HEAD
 - [x] Use YOLO model to generate prompt
 - [x] Try to run SAMRefiner
+=======
+- [ ] Check the code of video propogation
+- [ ] Analyze slice-wise performance (use image processing directly)
+- [x] Create a table to visualize results from different prompts
+>>>>>>> d8353d3faf51972efc4b7ee1fe3c9d04850ca2a6
 
 
 # Mean IoU Scores for SAM Prompting Methods
@@ -27,6 +33,7 @@ This table presents the **Mean IoU Scores** for different SAM prompting methods 
         <th>Overall</th>
         <th>Slices with Prompts</th>
     </tr>
+<<<<<<< HEAD
     <tr><td>81088</td><td>0.4667</td><td>1.0000</td><td>0.4040</td><td>0.8657</td><td>0.3851</td><td>0.8251</td><td>0.1884</td><td>0.4037</td></tr>
     <tr><td>80593</td><td>0.6333</td><td>1.0000</td><td>0.5650</td><td>0.8922</td><td>0.5410</td><td>0.8542</td><td>0.3188</td><td>0.5033</td></tr>
     <tr><td>80139</td><td>0.4000</td><td>1.0000</td><td>0.3434</td><td>0.8585</td><td>0.3264</td><td>0.8160</td><td>0.1195</td><td>0.2988</td></tr>
@@ -37,6 +44,18 @@ This table presents the **Mean IoU Scores** for different SAM prompting methods 
     <tr><td>80701</td><td>0.3833</td><td>1.0000</td><td>0.3250</td><td>0.8478</td><td>0.3110</td><td>0.8112</td><td>0.1909</td><td>0.4981</td></tr>
     <tr><td>80076</td><td>0.7125</td><td>1.0000</td><td>0.6389</td><td>0.8966</td><td>0.5901</td><td>0.8281</td><td>0.5080</td><td>0.7130</td></tr>
     <tr><td>80889</td><td>0.5500</td><td>1.0000</td><td>0.4717</td><td>0.8576</td><td>0.4745</td><td>0.8627</td><td>0.2810</td><td>0.5109</td></tr>
+=======
+    <tr><td>81088</td><td>0.4667</td><td>1.0000</td><td>0.3851</td><td>0.8251</td><td>0.1884</td><td>0.4037</td></tr>
+    <tr><td>80593</td><td>0.6333</td><td>1.0000</td><td>0.5410</td><td>0.8542</td><td>0.3188</td><td>0.5033</td></tr>
+    <tr><td>80139</td><td>0.4000</td><td>1.0000</td><td>0.3264</td><td>0.8160</td><td>0.1195</td><td>0.2988</td></tr>
+    <tr><td>80421</td><td>0.6333</td><td>1.0000</td><td>0.5368</td><td>0.8476</td><td>0.3635</td><td>0.5740</td></tr>
+    <tr><td>81099</td><td>0.4833</td><td>1.0000</td><td>0.4086</td><td>0.8454</td><td>0.2584</td><td>0.5347</td></tr>
+    <tr><td>80900</td><td>0.4333</td><td>1.0000</td><td>0.3697</td><td>0.8531</td><td>0.1831</td><td>0.4225</td></tr>
+    <tr><td>80179</td><td>0.5500</td><td>1.0000</td><td>0.4447</td><td>0.8086</td><td>0.2578</td><td>0.4688</td></tr>
+    <tr><td>80701</td><td>0.3833</td><td>1.0000</td><td>0.3110</td><td>0.8112</td><td>0.1909</td><td>0.4981</td></tr>
+    <tr><td>80076</td><td>0.7125</td><td>1.0000</td><td>0.5901</td><td>0.8281</td><td>0.5080</td><td>0.7130</td></tr>
+    <tr><td>80889</td><td>0.5500</td><td>1.0000</td><td>0.4745</td><td>0.8627</td><td>0.2810</td><td>0.5109</td></tr>
+>>>>>>> d8353d3faf51972efc4b7ee1fe3c9d04850ca2a6
 </table>
 
 
@@ -44,6 +63,7 @@ This table presents the **Mean IoU Scores** for different SAM prompting methods 
 - **Slices with Prompts**: IoU score considering only slices where prompts were applied.
 - **Average IoU Across 10 Cases**:
   - **Masks (Overall)**: 0.5246
+<<<<<<< HEAD
   - **Perturbed Masks (Overall)**: 0.4554
   - **Bounding Box (Overall)**: 0.4388
   - **Points (Overall)**: 0.2670
@@ -126,3 +146,7 @@ This may be a little bit lower probably because we count all empty masks as perf
 | **Point**                                                  | 0.7154 ± 0.0552 | 0.7675 ± 0.0533 |
 | **Box**                                                    | 0.8231 ± 0.0410 | 0.8813 ± 0.0307 |
 | **Mask**                                                   | 0.5194 ± 0.0838 | 0.5391 ± 0.0796 |
+=======
+  - **Bounding Box (Overall)**: 0.4388
+  - **Points (Overall)**: 0.2670
+>>>>>>> d8353d3faf51972efc4b7ee1fe3c9d04850ca2a6
