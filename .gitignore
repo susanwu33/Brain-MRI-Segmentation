@@ -1,0 +1,12 @@
+# Ignore all sam2_vis_result outputs
+sam2_vis_result*/
+yolo-sam2/
+
+# Keep code folders
+!mycode/
+!sam2/
+
+# Keep important files
+!.gitignore
+!README.md
+!.gitmodules
