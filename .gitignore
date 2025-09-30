@@ -2,6 +2,9 @@
 sam2_vis_result*/
 yolo-sam2/
 
+# Ignore external dependencies
+external/
+
 # Keep code folders
 !mycode/
 !sam2/
