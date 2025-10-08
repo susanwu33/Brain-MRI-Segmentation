@@ -5,6 +5,10 @@ yolo-sam2/
 # Ignore external dependencies
 external/
 
+# Ignore exp results
+mycode/YOLO/detect_prostate/best_prediction
+mycode/YOLO/detect_prostate/finetune_yolov11_v01_pred
+
 # Keep code folders
 !mycode/
 !sam2/
