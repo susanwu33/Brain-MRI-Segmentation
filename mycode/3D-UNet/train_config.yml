@@ -1,0 +1,84 @@
+model:
+  name: UNet3D
+  in_channels: 1
+  out_channels: 1
+  layer_order: gcr
+  f_maps: 16
+  num_levels: 3
+  num_groups: 8
+  final_sigmoid: true
+
+loss:
+  name: BCEDiceLoss
+  ignore_index: null
+  skip_last_target: false
+
+optimizer:
+  learning_rate: 0.0002
+  weight_decay: 0.00001
+
+eval_metric:
+  name: DiceCoefficient
+
+lr_scheduler:
+  name: ReduceLROnPlateau
+  mode: max
+  factor: 0.5
+  patience: 30
+
+trainer:
+  eval_score_higher_is_better: true
+  checkpoint_dir: /home/yw2692/workspace/Brain-MRI-Segmentation/mycode/3D-UNet/runs/exp3
+  resume: null
+  pre_trained: null
+  validate_after_iters: 100
+  log_after_iters: 50
+  max_num_epochs: 200
+  max_num_iterations: 1000000
+
+loaders:
+  num_workers: 1
+  raw_internal_path: raw
+  label_internal_path: label
+
+  train:
+    file_paths:
+      - /share/sablab/nfs04/data/Prostate-MRI-US-Biopsy/susan/hdf5_dataset/train
+
+    slice_builder:
+      name: FilterSliceBuilder
+      patch_shape: [20, 256, 256]
+      stride_shape: [10, 64, 64]
+      threshold: 0.01
+      slack_acceptance: 0.01
+
+    transformer:
+      raw:
+        - name: Normalize
+        - name: RandomFlip
+        - name: ToTensor
+          expand_dims: true
+      label:
+        - name: RandomFlip
+        - name: ToTensor
+          expand_dims: true
+
+  val:
+    file_paths:
+      - /share/sablab/nfs04/data/Prostate-MRI-US-Biopsy/susan/hdf5_dataset/val
+
+    slice_builder:
+      name: SliceBuilder
+      patch_shape: [20, 128, 128]
+      stride_shape: [10, 64, 64]
+      threshold: 0.01
+      slack_acceptance: 0.01
+
+    transformer:
+      raw:
+        - name: Normalize
+        - name: ToTensor
+          expand_dims: true
+      label:
+        - name: ToTensor
+          expand_dims: true

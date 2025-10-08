@@ -1,19 +1,38 @@
-# Ignore all sam2_vis_result outputs
+# ===== Project-wide ignores =====
+
+# External deps
+external/
+
+# SAM2 visualizations / YOLO-SAM2 demos
 sam2_vis_result*/
 yolo-sam2/
 
-# Ignore external dependencies
-external/
+# Experiment runs / predictions
+mycode/YOLO/detect_prostate/best_prediction/
+mycode/YOLO/detect_prostate/finetune_yolov11_v01_pred/
 
-# Ignore exp results
-mycode/YOLO/detect_prostate/best_prediction
-mycode/YOLO/detect_prostate/finetune_yolov11_v01_pred
+# COMMON ARTIFACT TYPES (globally ignore these)
+*.pt
+*.jpg
+*.jpeg
+*.png
+*.csv
+*.log
+*.npz
+*.npy
+*.h5
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
 
-# Keep code folders
-!mycode/
-!sam2/
+# trainer artifacts & logs
+**/runs/**
+*.tfevents.*
 
-# Keep important files
+# Keep important files at repo root
 !.gitignore
 !README.md
 !.gitmodules
+
+# IMPORTANT: do NOT re-include whole trees like `!mycode/` or `!sam2/` here.
+# We will control what to track inside those folders with per-folder .gitignore files.

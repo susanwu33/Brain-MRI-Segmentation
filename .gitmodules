@@ -1,0 +1,3 @@
+[submodule "external/SAMRefiner"]
+	path = external/SAMRefiner
+	url = https://github.com/linyq2117/SAMRefiner.git
